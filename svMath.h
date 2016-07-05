@@ -286,7 +286,7 @@ namespace sv
     class PositionT
     {
     public:
-        using Vec3 = glm::detail::tvec3<T>;
+        using Vec3 = glm::tvec3<T>;
         PositionT();
         PositionT(ECubeFace face, T s, T t, T p);
         PositionT(ECubeFace face, const Vec3& stp);
