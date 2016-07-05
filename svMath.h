@@ -13,20 +13,28 @@
 #include <ostream>
 #include <tuple>
 #include <bitset>
+#include <sstream>
+#include <vector>
 
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
 
 #include "glm/glm.hpp"
+/*
 #include "xs_Float.h"  // http://stereopsis.com/sree/fpu2006.html
 
 #include "svBase.h"
 #include "svColor.h"
+*/
 
 #define FLOOR_TO_INT(val)      xs_FloorToInt(val)
 #define ROUND_TO_INT(val)      xs_RoundToInt(val)
 #define CEIL_TO_INT(val)       xs_CeilToInt(val)
+
+#ifndef _MATH_DEFINES_DEFINED
+#define M_PI 3.14159265358979323846
+#endif
 
 namespace sv
 {

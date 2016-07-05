@@ -5,9 +5,11 @@
 //  Created by Xiang Wei on 2014-05-03.
 //  Copyright (c) 2014 whenitsdone.org. All rights reserved.
 //
-#include "svPrefix.h"
+//#include "svPrefix.h"
 
 #include "svVoronoiCore.h"
+
+#include <iostream>
 
 #define SV_DEBUG(...)   do { if (debugMode) { __VA_ARGS__; } } while(0)
 

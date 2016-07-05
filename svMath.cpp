@@ -6,9 +6,13 @@
 //  Copyright (c) 2014 whenitsdone.org. All rights reserved.
 //
 
-#include "svPrefix.h"
+//#include "svPrefix.h"
 
 #include "svMath.h"
+
+#include <numeric>
+
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace sv
 {

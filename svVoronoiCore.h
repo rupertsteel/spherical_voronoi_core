@@ -9,6 +9,8 @@
 #ifndef SphericalVoronoi_svvoronoi_h
 #define SphericalVoronoi_svvoronoi_h
 
+#include <functional>
+
 #include "svMath.h"
 #include "svData.h"
 
