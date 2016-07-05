@@ -179,6 +179,10 @@ namespace sv
             return (theta < right.theta) || (theta == right.theta && phi < right.phi);
         }
 
+		bool operator>=(const site_event& right) const {
+			return (theta > right.theta) || (theta == right.theta && phi >= right.phi);
+		}
+
         friend std::ostream& operator<< (std::ostream& stream, const site_event& e)
         {
             return stream << *e.cell;
@@ -232,7 +236,8 @@ namespace sv
     {
         bool operator()(const std::shared_ptr<circle_event>& left, const std::shared_ptr<circle_event>& right) const
         {
-            return *left < *right;
+            //return *left < *right;
+			return *right < *left;
         }
     };
 

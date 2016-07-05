@@ -91,27 +91,70 @@ namespace sv
 
         std::vector<site_event> siteEventQueue;
         std::vector<circle_event_ptr> circleEventQueue;
+        std::set<std::weak_ptr<circle_event>, std::owner_less<>> circleEventDeletedEvents;
 
         void addNewSiteEvent(const site_event& event)
         {
-            using namespace std;
+            /*using namespace std;
             auto it = lower_bound(siteEventQueue.begin(), siteEventQueue.end(), event);
-            siteEventQueue.insert(it, event);
+            siteEventQueue.insert(it, event);*/
+
+            siteEventQueue.push_back(event);
+            std::push_heap(siteEventQueue.begin(), siteEventQueue.end(), std::greater_equal<>{});
         }
 
         void addNewCircleEvent(const std::shared_ptr<circle_event>& event)
         {
-            using namespace std;
-            auto it = lower_bound(circleEventQueue.begin(), circleEventQueue.end(), event, compare_circle_event_priority());
-            circleEventQueue.insert(it, event);
+            //using namespace std;
+            //auto it = lower_bound(circleEventQueue.begin(), circleEventQueue.end(), event, compare_circle_event_priority());
+            //circleEventQueue.insert(it, event);
+
+            circleEventQueue.push_back(event);
+            std::push_heap(circleEventQueue.begin(), circleEventQueue.end(), compare_circle_event_priority{});
         }
 
         void removeCircleEvent(const std::shared_ptr<circle_event>& event)
         {
-            using namespace std;
-            auto it = find(circleEventQueue.begin(), circleEventQueue.end(), event);
-            assert(it != circleEventQueue.end());
-            circleEventQueue.erase(it);
+            //using namespace std;
+            //auto it = find(circleEventQueue.begin(), circleEventQueue.end(), event);
+            //assert(it != circleEventQueue.end());
+            //circleEventQueue.erase(it);
+            circleEventDeletedEvents.insert(event);
+        }
+
+        std::shared_ptr<circle_event> getCircleEvent() {
+            while (circleEventQueue.size()) {
+                auto it = circleEventDeletedEvents.find(circleEventQueue[0]);
+                if (it != circleEventDeletedEvents.end()) {
+                    // We have an event that is meant to be deleted, remove it
+                    std::pop_heap(circleEventQueue.begin(), circleEventQueue.end(), compare_circle_event_priority{});
+                    circleEventQueue.pop_back();
+                    circleEventDeletedEvents.erase(it);
+                } else {
+                    return circleEventQueue[0];
+                }
+            }
+
+            return nullptr;
+        }
+
+        void popCircleEvent() {
+            while (circleEventQueue.size()) {
+                auto it = circleEventDeletedEvents.find(circleEventQueue[0]);
+                std::pop_heap(circleEventQueue.begin(), circleEventQueue.end(), compare_circle_event_priority{});
+                circleEventQueue.pop_back();
+
+                if (it != circleEventDeletedEvents.end()) {
+                    // We have an event that is meant to be deleted, remove it and repeat
+                    circleEventDeletedEvents.erase(it);
+                } else {
+                    return;
+                }
+            }
+        }
+
+        size_t getCircleEventQueueSize() const {
+            return circleEventQueue.size() - circleEventDeletedEvents.size();
         }
     };
 }

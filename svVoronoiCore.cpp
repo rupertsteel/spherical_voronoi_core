@@ -64,7 +64,7 @@ namespace sv
 
     bool SphericalVoronoiCore::isFinished() const
     {
-        return siteEventQueue.size() == 0 && circleEventQueue.size() == 0;
+        return siteEventQueue.size() == 0 && getCircleEventQueueSize() == 0;
     }
 
     void SphericalVoronoiCore::dumpBeachState(std::ostream& stream)
@@ -100,34 +100,41 @@ namespace sv
 
             SV_DEBUG(cout << "step " << nbSteps << " " << scanLine.xi);
 
-            if (siteEventQueue.size() > 0 && (circleEventQueue.size() == 0 || siteEventQueue[0].theta < circleEventQueue[0]->theta))
+            if (siteEventQueue.size() > 0 && (getCircleEventQueueSize() == 0 || siteEventQueue[0].theta < getCircleEvent()->theta))
             {
-                auto se = siteEventQueue[0];
+                //auto se = siteEventQueue[0];
+
+                std::pop_heap(siteEventQueue.begin(), siteEventQueue.end(), std::greater_equal<>{});
+                auto se = siteEventQueue.back();
                 if (se.theta <= nextXi)
                 {
                     scanLine.xi = se.theta;
                     SV_DEBUG(cout << " -> " << scanLine.xi << endl);
                     SV_DEBUG(dumpBeachState(cout));
                     handleSiteEvent(se);
-                    siteEventQueue.erase(siteEventQueue.begin());
+                    //siteEventQueue.erase(siteEventQueue.begin());
+                    siteEventQueue.pop_back();
                     SV_DEBUG(dumpBeachState(cout));
                 }
                 else
                 {
                     scanLine.xi = nextXi;
                     SV_DEBUG(cout << " -> " << scanLine.xi << endl);
+                    std::push_heap(siteEventQueue.begin(), siteEventQueue.end(), std::greater_equal<>{});
                 }
             }
-            else if (circleEventQueue.size() > 0)
+            else if (getCircleEventQueueSize() > 0)
             {
-                auto ce = circleEventQueue[0];
+                auto ce = getCircleEvent();
+                //auto ce = circleEventQueue[0];
                 if (ce->theta <= nextXi)
                 {
                     scanLine.xi = ce->theta;
                     SV_DEBUG(cout << " -> " << scanLine.xi << endl);
                     SV_DEBUG(dumpBeachState(cout));
                     handleCircleEvent(ce);
-                    circleEventQueue.erase(circleEventQueue.begin());
+                    popCircleEvent();
+                    //circleEventQueue.erase(circleEventQueue.begin());
                     SV_DEBUG(dumpBeachState(cout));
                 }
                 else
