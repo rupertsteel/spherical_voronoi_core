@@ -529,7 +529,7 @@ namespace sv
                     itArc2 = getNextArcOnBeach(itPrevArc);
                     itNewArc = getNextArcOnBeach(itArc2);
                     itArc = getNextArcOnBeach(itNewArc);
-                    itNextArc = getNextArcOnBeach(itNextArc);
+                    itNextArc = getNextArcOnBeach(itArc); // This was itNextArc in the brackets, is this right?
 
                     auto ce1 = make_shared<circle_event>(prevArc, arc2, newArc);
                     if (ce1->theta >= event.theta)
