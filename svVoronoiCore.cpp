@@ -475,12 +475,13 @@ namespace sv
                 auto prevArc = *itPrevArc;
                 beach_type::const_iterator itNextArc = getNextArcOnBeach(itArc);
                 auto nextArc = *itNextArc;
-                /*auto& nextArc = */*itNextArc;
 
                 Point pointPrev, pointNext;
                 bool intPrev, intNext;
-                intPrev = intersectWithPrevArc(itArc, scanLine.xi, pointPrev);
-                intNext = intersectWithNextArc(itArc, scanLine.xi, pointNext);
+                assert(itArc != itPrevArc);
+                assert(itArc != itNextArc);
+                intPrev = arcsIntersection(**itPrevArc, **itArc, scanLine.xi, pointPrev);
+                intNext = arcsIntersection(**itArc, **itNextArc, scanLine.xi, pointNext);
 
                 Real phi_start = arc->cell->point.phi - M_PI;
                 if (intPrev)
